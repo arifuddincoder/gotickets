@@ -24,13 +24,6 @@ func (cv *CustomValidator) Validate(i any) error {
 	return nil
 }
 
-type User struct {
-	gorm.Model
-	Name     string `json:"name"     validate:"required"       gorm:"type:varchar(100);not null"`
-	Email    string `json:"email"    validate:"required,email"  gorm:"type:varchar(100);uniqueIndex;not null"`
-	Password string `json:"password"  validate:"required,min=6"  gorm:"type:varchar(255);not null"`
-}
-
 func main() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")

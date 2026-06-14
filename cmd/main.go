@@ -6,9 +6,11 @@ import (
 )
 
 func main() {
+	// load environment variables
 	cfg := config.LoadEnv()
-
-	db := config.InitDB(cfg)
-
+	// connect to the database
+	db := config.ConnectDatabase(cfg)
+	// start the server
 	server.Start(db, cfg)
+
 }

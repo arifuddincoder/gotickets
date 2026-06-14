@@ -3,15 +3,15 @@ package user
 import (
 	"fmt"
 	"gotickets/internal/auth"
-	"gotickets/internal/user/dto"
+	"gotickets/internal/domain/user/dto"
 )
+
+var ErrInvalidCredentials = fmt.Errorf("invalid email or password")
 
 type service struct {
 	repo       Repository
 	jwtService auth.JWTService
 }
-
-var ErrInvalidCredentials = fmt.Errorf("invalid email or password")
 
 func NewService(repo Repository, jwtService auth.JWTService) *service {
 	return &service{repo, jwtService}
@@ -24,10 +24,13 @@ func (s *service) CreateUser(req dto.CreateRequest) (*dto.Response, error) {
 		Email: req.Email,
 	}
 
+	// hash password and set to user.Password
 	err := user.hashPassword(req.Password)
+	if err != nil {
+		return nil, err
+	}
 
 	err = s.repo.CreateUser(&user)
-
 	if err != nil {
 		return nil, err
 	}
@@ -40,6 +43,7 @@ func (s *service) CreateUser(req dto.CreateRequest) (*dto.Response, error) {
 	}
 
 	return &response, nil
+
 }
 
 func (s *service) LoginUser(req dto.LoginRequest) (*dto.Response, error) {

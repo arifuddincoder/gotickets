@@ -2,8 +2,8 @@ package user
 
 import (
 	"errors"
+	"gotickets/internal/domain/user/dto"
 	"gotickets/internal/httpresponse"
-	"gotickets/internal/user/dto"
 	"net/http"
 
 	"github.com/labstack/echo/v5"
@@ -41,7 +41,7 @@ func (h *handler) CreateUser(c *echo.Context) error {
 	response, err := h.service.CreateUser(req)
 	if err != nil {
 
-		if errors.Is(err, errorAlreadyExist) {
+		if errors.Is(err, ErrorAlreadyExist) {
 			return c.JSON(http.StatusConflict, httpresponse.Error{
 				Code:    http.StatusConflict,
 				Message: "Failed to create User",
@@ -59,7 +59,6 @@ func (h *handler) CreateUser(c *echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 
 }
-
 func (h *handler) LoginUser(c *echo.Context) error {
 	var req dto.LoginRequest // input
 
